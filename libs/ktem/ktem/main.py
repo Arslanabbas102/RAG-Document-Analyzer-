@@ -63,7 +63,7 @@ class App(BaseApp):
             if len(self.index_manager.indices) == 1:
                 for index in self.index_manager.indices:
                     with gr.Tab(
-                        f"{index.name}",
+                        "Files",
                         elem_id="indices-tab",
                         elem_classes=[
                             "fill-main-area-height",

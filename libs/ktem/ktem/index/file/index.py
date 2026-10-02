@@ -469,6 +469,16 @@ class FileIndex(BaseIndex):
             if key.startswith(prefix):
                 stripped_settings[key[len(prefix) :]] = value
 
+        # the selector only learns the user id when its mode is changed, so fill
+        # in the signed-in user when the default "Search All" was left untouched
+        if (
+            user_id is not None
+            and isinstance(selected, (list, tuple))
+            and len(selected) == 3
+            and selected[2] in (None, -1)
+        ):
+            selected = [selected[0], selected[1], user_id]
+
         # transform selected id
         selected_ids: Optional[list[str]] = self._selector_ui.get_selected_ids(selected)
 

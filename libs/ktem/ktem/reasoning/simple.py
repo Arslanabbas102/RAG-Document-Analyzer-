@@ -422,7 +422,8 @@ class FullQAPipeline(BaseReasoning):
                 "value": (
                     "highlight"
                     if not config("USE_LOW_LLM_REQUESTS", default=False, cast=bool)
-                    else "off"
+                    # inline citations are produced in the same LLM call
+                    else "inline"
                 ),
                 "component": "radio",
                 "choices": [

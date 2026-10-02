@@ -50,6 +50,7 @@ class BaseApp:
         with (dir_assets / "js" / "main.js").open() as fi:
             self._js = fi.read()
             self._js = self._js.replace("KH_APP_VERSION", self.app_version)
+            self._js = self._js.replace("KH_APP_NAME", self.app_name)
         with (dir_assets / "js" / "pdf_viewer.js").open(encoding="utf-8") as fi:
             self._pdf_view_js = fi.read()
             # workaround for Windows path
@@ -183,16 +184,18 @@ class BaseApp:
             };
         </script>
         """
+        # pdfjs-viewer-element v3+ dropped the `viewer-path` attribute that
+        # pdf_viewer.js relies on, so pin the 2.x line.
         external_js = (
             "<script type='module' "
-            "src='https://cdn.skypack.dev/pdfjs-viewer-element'>"
+            "src='https://cdn.jsdelivr.net/npm/pdfjs-viewer-element@2.7.4/+esm'>"
             "</script>"
-            "<script type='module' "
+            "<script "
             "src='https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js'>"  # noqa
+            "</script>"
             f"{markmap_js}"
             "<script src='https://cdn.jsdelivr.net/npm/markmap-autoloader@0.16'></script>"  # noqa
             "<script src='https://cdn.jsdelivr.net/npm/minisearch@7.1.1/dist/umd/index.min.js'></script>"  # noqa
-            "</script>"
             "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.css'/>"  # noqa
         )
 

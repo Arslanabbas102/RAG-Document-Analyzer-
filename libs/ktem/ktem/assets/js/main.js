@@ -2,13 +2,28 @@ function run() {
   let main_parent = document.getElementById("chat-tab").parentNode;
 
   main_parent.childNodes[0].classList.add("header-bar");
-  main_parent.style = "padding: 0; margin: 0";
+  main_parent.style = "padding: 0; margin: 0; position: relative";
   main_parent.parentNode.style = "gap: 0";
   main_parent.parentNode.parentNode.style = "padding: 0";
 
-  const version_node = document.createElement("p");
-  version_node.innerHTML = "version: KH_APP_VERSION";
-  version_node.style = "position: fixed; top: 10px; right: 10px;";
+  // brand block pinned to the left of the header bar (positioned via CSS so
+  // it stays out of the tab buttons that gradio re-renders)
+  const brand_node = document.createElement("div");
+  brand_node.className = "app-brand";
+  brand_node.innerHTML = `
+    <span class="app-brand-logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+        <path d="M14 3v5h5"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="m13.5 16.5 2 2"/>
+      </svg>
+    </span>
+    <span class="app-brand-name">KH_APP_NAME</span>`;
+  main_parent.appendChild(brand_node);
+
+  const version_node = document.createElement("span");
+  version_node.className = "app-version";
+  version_node.textContent = "vKH_APP_VERSION";
   main_parent.appendChild(version_node);
 
   // add favicon

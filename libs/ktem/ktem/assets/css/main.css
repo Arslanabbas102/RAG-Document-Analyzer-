@@ -1,5 +1,6 @@
 :root {
-  --main-area-height: calc(100vh - 110px);
+  --main-area-height: calc(100vh - 96px);
+  --header-height: 56px;
 }
 
 /* no footer */
@@ -27,29 +28,108 @@ footer {
   height: 100% !important; */
 }
 
-/* styling for header bar */
+/* styling for header bar: brand on the left, tabs, version + theme toggle on the right */
 .header-bar {
-  background-color: transparent;
-  margin: 0px 0px 20px;
-  overflow-x: scroll;
-  display: block !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  gap: 2px;
+  height: var(--header-height);
+  margin: 0 0 16px !important;
+  padding: 0 150px 0 280px !important;
+  background: var(--background-fill-primary) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border-color-primary) !important;
+  overflow-x: auto;
+  scrollbar-width: none;
   text-wrap: nowrap;
-  border: none;
+}
+.header-bar::-webkit-scrollbar {
+  display: none;
+}
+.header-bar button {
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  margin: 0 !important;
+  padding: 7px 14px !important;
+  color: var(--body-text-color-subdued) !important;
+  font-weight: 500;
+  background: transparent !important;
+  transition: background-color 0.15s, color 0.15s;
+}
+.header-bar button:hover {
+  color: var(--body-text-color) !important;
+  background: var(--background-fill-secondary) !important;
 }
 .header-bar button.selected {
-  border: none;
+  color: var(--color-accent) !important;
+  background: var(--color-accent-soft) !important;
+  font-weight: 600;
+}
+/* the sign-in screen is the only tab while logged out: no need to show it */
+.header-bar #login-tab-button {
+  display: none;
+}
 
-  /* an alternative header bar style with rounded background */
-  /* background-color: var(--background-fill-primary);
-  border: 4px solid transparent;
-  border-radius: var(--radius-lg);
-  background-clip: padding-box; */
+.app-brand {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+  pointer-events: none;
+}
+.app-brand-logo {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: white;
+  background: var(--color-accent);
+}
+.app-brand-name {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--body-text-color);
+}
+.app-version {
+  position: absolute;
+  top: calc(var(--header-height) / 2 - 11px);
+  right: 76px;
+  z-index: 2;
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--body-text-color-subdued);
+  border: 1px solid var(--border-color-primary);
+  border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+  .header-bar {
+    padding: 0 110px 0 64px !important;
+  }
+  .app-brand-name,
+  .app-version {
+    display: none;
+  }
+  /* tabs scroll horizontally under the theme toggle: give it a solid backing */
+  #toggle-dark-button {
+    right: 32px;
+    background: var(--background-fill-primary) !important;
+    box-shadow: -16px 0 12px var(--background-fill-primary);
+  }
 }
 
 /* selected buttons have highlighted text */
 button.selected {
-  color: var(--block-label-text-color);
-  font-weight: bold;
+  color: var(--color-accent);
+  font-weight: 600;
 }
 
 .message-row.bubble.bot-row{
@@ -86,6 +166,8 @@ button.selected {
 
 #main-chat-bot {
   background: var(--background-fill-primary);
+  border: 1px solid var(--border-color-primary);
+  border-radius: var(--radius-lg);
   flex: auto;
 }
 
@@ -137,7 +219,9 @@ td {
 }
 
 mark {
-  background-color: #10b981;
+  background-color: rgba(250, 204, 21, 0.45);
+  color: inherit;
+  border-radius: 2px;
 }
 
 /* clpse */
@@ -194,8 +278,12 @@ mark {
 
 #toggle-dark-button {
   position: fixed;
-  top: 6px;
+  top: 29px;
   right: 30px;
+  z-index: 3;
+  width: 36px;
+  min-width: 0 !important;
+  padding: 4px !important;
 }
 
 #info-expand-button {
@@ -235,7 +323,7 @@ mark {
 }
 
 #citation-dropdown {
-  width: min(25%, 100px);
+  width: min(30%, 170px);
   position: absolute;
   top: 2px;
   left: 120px;
@@ -253,7 +341,7 @@ mark {
 }
 
 #quick-file {
-  height: 110px;
+  height: 130px;
 }
 
 span.icon {
@@ -368,11 +456,11 @@ pdfjs-viewer-element {
   -webkit-transform: translate3d(100%, 0, 0);
   -moz-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
-  background: #12df9a;
+  background: #fff;
 }
 
 .switch:has(> input:checked) {
-  background: #0c895f;
+  background: var(--color-accent);
 }
 
 /* Bot animation */
@@ -396,7 +484,8 @@ details.evidence {
 }
 
 .message a.citation {
-  color: #10b981;
+  color: var(--color-accent);
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -455,4 +544,167 @@ div.markmap {
 #login-row {
   display: grid;
   place-items: center;
+}
+
+/* ---------- sign-in page ---------- */
+
+#login-card {
+  max-width: 420px;
+  margin: 10vh auto 0 !important;
+  padding: 32px 28px !important;
+  background: var(--block-background-fill);
+  border: 1px solid var(--border-color-primary);
+  border-radius: 16px;
+  box-shadow: var(--shadow-drop-lg);
+}
+#login-card .form {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#login-card .block {
+  border: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+#login-heading h1 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+#login-heading p {
+  margin: 0;
+  color: var(--body-text-color-subdued);
+}
+#login-card .auth-form {
+  gap: 12px;
+}
+#login-card .auth-title h3 {
+  margin: 8px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+/* gradio puts the class on both the block and its inner markdown: style the
+   outer block only */
+#login-card .auth-error .auth-error {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+#login-card .auth-error {
+  padding: 10px 12px !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  border-radius: var(--radius-md);
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: #b91c1c;
+  font-size: 13px;
+}
+.dark #login-card .auth-error {
+  color: #fca5a5;
+}
+#login-card .auth-error p,
+#login-card .auth-error ul {
+  margin: 0;
+}
+#login-card .auth-error ul {
+  padding-left: 16px;
+}
+/* "switch form" buttons look like links */
+#login-card button.auth-switch {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--color-accent) !important;
+  font-weight: 500;
+}
+#login-card button.auth-switch:hover {
+  text-decoration: underline;
+}
+
+/* ---------- chat ---------- */
+
+#chat-input {
+  border: 1px solid var(--border-color-primary) !important;
+  border-radius: var(--radius-lg) !important;
+  background: var(--background-fill-primary) !important;
+  box-shadow: var(--shadow-drop-lg);
+  transition: border-color 0.15s;
+}
+#chat-input:focus-within {
+  border-color: var(--color-accent) !important;
+}
+#chat-input textarea {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* empty-conversation guide (gradio renders it inside a <center>) */
+#main-chat-bot center {
+  text-align: left;
+}
+#main-chat-bot center > .prose {
+  display: block;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.8;
+  color: var(--body-text-color-subdued);
+}
+#main-chat-bot center h3 {
+  margin-bottom: 12px;
+  color: var(--body-text-color);
+  font-size: 20px;
+}
+
+/* chat bubbles */
+#main-chat-bot .message.user {
+  background: var(--color-accent-soft) !important;
+  border-color: transparent !important;
+}
+#main-chat-bot .message.bot {
+  background: var(--background-fill-secondary) !important;
+  border: 1px solid var(--border-color-primary) !important;
+}
+
+/* side panels */
+#conv-settings-panel .block,
+#chat-info-panel .block {
+  border-radius: var(--radius-lg);
+}
+#info-expand > .label-wrap,
+#chat-settings-expand > .label-wrap,
+#conv-settings-panel .label-wrap {
+  font-weight: 600;
+}
+
+/* evidence cards in the information panel */
+#html-info-panel details.evidence {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color-primary);
+  border-radius: var(--radius-md);
+  background: var(--background-fill-primary);
+}
+#html-info-panel details.evidence > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ---------- tables & uploads ---------- */
+
+.table-wrap,
+table {
+  border-radius: var(--radius-md);
+}
+#quick-file,
+.indices-tab [data-testid="file-upload"] {
+  border: 1.5px dashed var(--border-color-primary) !important;
+  border-radius: var(--radius-lg) !important;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+#quick-file:hover,
+.indices-tab [data-testid="file-upload"]:hover {
+  border-color: var(--color-accent) !important;
+  background: var(--color-accent-soft) !important;
 }

@@ -6,9 +6,12 @@ KH_DEMO_MODE = getattr(flowsettings, "KH_DEMO_MODE", False)
 
 if not KH_DEMO_MODE:
     PLACEHOLDER_TEXT = (
-        "This is the beginning of a new conversation.\n"
-        "Start by uploading a file or a web URL. "
-        "Visit Files tab for more options (e.g: GraphRAG)."
+        "### Ask anything about your documents\n\n"
+        "**1. Add documents**: drop files in *Quick Upload* on the left, "
+        "or use the *Files* tab.  \n"
+        "**2. Choose scope**: search all files, or pick specific ones.  \n"
+        "**3. Ask a question**: answers come with citations you can open "
+        "in the panel on the right."
     )
 else:
     PLACEHOLDER_TEXT = (

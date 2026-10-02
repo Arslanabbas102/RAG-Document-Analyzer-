@@ -46,7 +46,14 @@ function() {
 """
 
 update_file_list_js = """
-function(file_list) {
+function updateFileList(file_list) {
+    // tribute.js is injected into <head> asynchronously and may not be ready
+    // yet on first load: retry shortly instead of throwing
+    if (typeof Tribute === "undefined") {
+        setTimeout(function() { updateFileList(file_list); }, 500);
+        return;
+    }
+
     var values = [{
         key: "web_search_label",
         value: "web_search_value",
@@ -1749,9 +1756,11 @@ class FileSelector(BasePage):
         self.on_building_ui()
 
     def default(self):
+        # search all of the user's files by default; "disabled" (no retrieval)
+        # isn't a visible choice, so it made questions silently skip documents
         if self._app.f_user_management:
-            return "disabled", [], -1
-        return "disabled", [], 1
+            return "all", [], -1
+        return "all", [], 1
 
     def on_building_ui(self):
         default_mode, default_selector, user_id = self.default()

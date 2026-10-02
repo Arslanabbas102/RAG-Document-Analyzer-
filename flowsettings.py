@@ -1,5 +1,6 @@
 import os
 from importlib.metadata import version
+from importlib.util import find_spec
 from inspect import currentframe, getframeinfo
 from pathlib import Path
 
@@ -16,6 +17,7 @@ this_dir = Path(this_file).parent
 # change this if your app use a different name
 KH_PACKAGE_NAME = "kotaemon_app"
 
+KH_APP_NAME = config("KH_APP_NAME", default="RAG Document Analyzer")
 KH_APP_VERSION = config("KH_APP_VERSION", None)
 if not KH_APP_VERSION:
     try:
@@ -74,6 +76,8 @@ KH_FEATURE_CHAT_SUGGESTION = config(
 KH_FEATURE_USER_MANAGEMENT = config(
     "KH_FEATURE_USER_MANAGEMENT", default=True, cast=bool
 )
+# let people create their own (non-admin) account from the sign-in page
+KH_FEATURE_USER_SIGNUP = config("KH_FEATURE_USER_SIGNUP", default=True, cast=bool)
 KH_USER_CAN_SEE_PUBLIC = None
 KH_FEATURE_USER_MANAGEMENT_ADMIN = str(
     config("KH_FEATURE_USER_MANAGEMENT_ADMIN", default="admin")
@@ -144,6 +148,14 @@ OPENAI_DEFAULT = "<YOUR_OPENAI_KEY>"
 OPENAI_API_KEY = config("OPENAI_API_KEY", default=OPENAI_DEFAULT)
 GOOGLE_API_KEY = config("GOOGLE_API_KEY", default="your-key")
 IS_OPENAI_DEFAULT = len(OPENAI_API_KEY) > 0 and OPENAI_API_KEY != OPENAI_DEFAULT
+# with no cloud key configured but a LOCAL_MODEL set, default to local models
+# so the app works out of the box (requires Ollama to be running)
+IS_LOCAL_DEFAULT = (
+    not IS_OPENAI_DEFAULT
+    and GOOGLE_API_KEY == "your-key"
+    and bool(config("LOCAL_MODEL", default=""))
+)
+IS_GOOGLE_DEFAULT = not IS_OPENAI_DEFAULT and not IS_LOCAL_DEFAULT
 
 if OPENAI_API_KEY:
     KH_LLMS["openai"] = {
@@ -199,7 +211,7 @@ if config("LOCAL_MODEL", default=""):
             "model": config("LOCAL_MODEL", default="qwen2.5:7b"),
             "api_key": "ollama",
         },
-        "default": False,
+        "default": IS_LOCAL_DEFAULT,
     }
     KH_LLMS["ollama-long-context"] = {
         "spec": {
@@ -225,7 +237,7 @@ if config("LOCAL_MODEL", default=""):
             "__type__": "kotaemon.embeddings.FastEmbedEmbeddings",
             "model_name": "BAAI/bge-base-en-v1.5",
         },
-        "default": False,
+        "default": IS_LOCAL_DEFAULT,
     }
 
 # additional LLM configurations
@@ -243,7 +255,7 @@ KH_LLMS["google"] = {
         "model_name": "gemini-1.5-flash",
         "api_key": GOOGLE_API_KEY,
     },
-    "default": not IS_OPENAI_DEFAULT,
+    "default": IS_GOOGLE_DEFAULT,
 }
 KH_LLMS["groq"] = {
     "spec": {
@@ -288,7 +300,7 @@ KH_EMBEDDINGS["google"] = {
         "model": "models/text-embedding-004",
         "google_api_key": GOOGLE_API_KEY,
     },
-    "default": not IS_OPENAI_DEFAULT,
+    "default": IS_GOOGLE_DEFAULT,
 }
 KH_EMBEDDINGS["mistral"] = {
     "spec": {
@@ -348,15 +360,22 @@ SETTINGS_REASONING = {
     },
     "max_context_length": {
         "name": "Max context length (LLM)",
-        "value": 32000,
+        # lower this for small/local models: the whole context is re-read
+        # for every question
+        "value": config("KH_MAX_CONTEXT_LENGTH", default=32000, cast=int),
         "component": "number",
     },
 }
 
 USE_GLOBAL_GRAPHRAG = config("USE_GLOBAL_GRAPHRAG", default=True, cast=bool)
 USE_NANO_GRAPHRAG = config("USE_NANO_GRAPHRAG", default=False, cast=bool)
-USE_LIGHTRAG = config("USE_LIGHTRAG", default=True, cast=bool)
-USE_MS_GRAPHRAG = config("USE_MS_GRAPHRAG", default=True, cast=bool)
+# graph-based collections only work when their packages are installed
+USE_LIGHTRAG = config(
+    "USE_LIGHTRAG", default=find_spec("lightrag") is not None, cast=bool
+)
+USE_MS_GRAPHRAG = config(
+    "USE_MS_GRAPHRAG", default=find_spec("graphrag") is not None, cast=bool
+)
 
 GRAPHRAG_INDEX_TYPES = []
 

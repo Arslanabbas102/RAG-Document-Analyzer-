@@ -189,7 +189,17 @@ class IndexManager:
 
         with Session(engine) as sess:
             index_defs = sess.exec(select(Index))
+            enabled_types = set(self._index_types.values())
             for index_def in index_defs:
+                index_cls = import_dotted_string(index_def.index_type, safe=False)
+                if index_cls not in enabled_types:
+                    # e.g. a GraphRAG collection whose package isn't installed:
+                    # keep its data, but don't show a collection that can't work
+                    print(
+                        f"Skipping index '{index_def.name}': "
+                        f"{index_def.index_type} is not enabled"
+                    )
+                    continue
                 self.start_index(**index_def.model_dump())
 
     @property
