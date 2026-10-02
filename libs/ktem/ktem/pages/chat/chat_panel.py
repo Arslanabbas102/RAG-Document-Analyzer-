@@ -15,7 +15,7 @@ if not KH_DEMO_MODE:
     )
 else:
     PLACEHOLDER_TEXT = (
-        "Welcome to Kotaemon Demo. "
+        "Welcome to the RAG Document Analyzer demo. "
         "Start by browsing preloaded conversations to get onboard.\n"
         "Check out Hint section for more tips."
     )

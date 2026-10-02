@@ -18,6 +18,10 @@ this_dir = Path(this_file).parent
 KH_PACKAGE_NAME = "kotaemon_app"
 
 KH_APP_NAME = config("KH_APP_NAME", default="RAG Document Analyzer")
+# GitHub repo ("owner/name") used for the Help page links and release notes
+KH_GITHUB_REPO = config(
+    "KH_GITHUB_REPO", default="Arslanabbas102/RAG-Document-Analyzer-"
+)
 KH_APP_VERSION = config("KH_APP_VERSION", None)
 if not KH_APP_VERSION:
     try:

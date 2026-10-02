@@ -36,7 +36,9 @@ class HelpPage:
         self,
         app,
         doc_dir: str = settings.KH_DOC_DIR,
-        remote_content_url: str = "https://raw.githubusercontent.com/Cinnamon/kotaemon",
+        remote_content_url: str = (
+            f"https://raw.githubusercontent.com/{settings.KH_GITHUB_REPO}"
+        ),
         app_version: str | None = settings.KH_APP_VERSION,
         changelogs_cache_dir: str
         | Path = (Path(settings.KH_APP_DATA_DIR) / "changelogs"),
@@ -67,7 +69,7 @@ class HelpPage:
             with gr.Accordion("Create Your Own Space"):
                 gr.Markdown(
                     "This is a demo with limited functionality. "
-                    "Use **Create space** button to install Kotaemon "
+                    f"Use **Create space** button to install {self._app.app_name} "
                     "in your own space with all features "
                     "(including upload and manage your private "
                     "documents securely)."
@@ -100,7 +102,7 @@ class HelpPage:
                     changelogs = fi.read()
             else:
                 release_url_base = (
-                    "https://api.github.com/repos/Cinnamon/kotaemon/releases"
+                    f"https://api.github.com/repos/{settings.KH_GITHUB_REPO}/releases"
                 )
                 changelogs = download_changelogs(
                     release_url=f"{release_url_base}/tags/v{self.app_version}"

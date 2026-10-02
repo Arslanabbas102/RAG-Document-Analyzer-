@@ -1,11 +1,11 @@
-# About Kotaemon
+# About RAG Document Analyzer
 
-An open-source tool for chatting with your documents. Built with both end users and
-developers in mind.
+Chat with your documents and get answers with citations you can check:
+upload PDFs, Office files, spreadsheets or web pages, ask questions, and open
+the exact passage each answer came from.
 
-[Source Code](https://github.com/Cinnamon/kotaemon) |
-[HF Space](https://huggingface.co/spaces/cin-model/kotaemon-demo)
+[Source Code](https://github.com/Arslanabbas102/RAG-Document-Analyzer-) |
+[Feedback](https://github.com/Arslanabbas102/RAG-Document-Analyzer-/issues)
 
-[Installation Guide](https://cinnamon.github.io/kotaemon/) |
-[Developer Guide](https://cinnamon.github.io/kotaemon/development/) |
-[Feedback](https://github.com/Cinnamon/kotaemon/issues)
+Built on the open-source [kotaemon](https://github.com/Cinnamon/kotaemon)
+project by Cinnamon AI (Apache-2.0).
